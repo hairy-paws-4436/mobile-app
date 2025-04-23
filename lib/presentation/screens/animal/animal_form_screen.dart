@@ -15,9 +15,9 @@ class AnimalFormScreen extends StatefulWidget {
   final String? animalId;
 
   const AnimalFormScreen({
-    Key? key,
+    super.key,
     this.animalId,
-  }) : super(key: key);
+  });
 
   @override
   State<AnimalFormScreen> createState() => _AnimalFormScreenState();
@@ -36,7 +36,7 @@ class _AnimalFormScreenState extends State<AnimalFormScreen> {
 
   String _gender = 'male';
   String _size = 'medium';
-  List<XFile> _imageFiles = [];
+  final List<XFile> _imageFiles = [];
   final _imagePicker = ImagePicker();
   bool _isEditing = false;
   Animal? _animal;

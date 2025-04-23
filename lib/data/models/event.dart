@@ -27,17 +27,17 @@ class Event {
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
+      id: json['id'] ?? '',
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
       eventDate: DateTime.parse(json['eventDate']),
       endDate: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
-      location: json['location'],
-      isVolunteerEvent: json['isVolunteerEvent'],
-      maxParticipants: json['maxParticipants'],
-      requirements: json['requirements'],
-      image: json['image'],
-      organizerId: json['organizerId'],
+      location: json['location'] ?? '',
+      isVolunteerEvent: json['isVolunteerEvent'] ?? true,
+      maxParticipants: json['maxParticipants'] ?? 0,
+      requirements: json['requirements'] ?? '',
+      image: json['image'] ?? '',
+      organizerId: json['organizerId'] ?? '',
     );
   }
 }

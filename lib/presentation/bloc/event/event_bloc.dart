@@ -20,7 +20,9 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       FetchEventsEvent event,
       Emitter<EventState> emit,
       ) async {
-    emit(EventLoading());
+    if (state is! EventsLoaded) {
+      emit(EventLoading());
+    }
     try {
       final events = await eventRepository.getEvents();
       emit(EventsLoaded(events));

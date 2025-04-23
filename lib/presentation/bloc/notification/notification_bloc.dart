@@ -17,7 +17,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       FetchNotificationsEvent event,
       Emitter<NotificationState> emit,
       ) async {
-    emit(NotificationLoading());
+    if (state is! NotificationsLoaded) {
+      emit(NotificationLoading());
+    }
     try {
       final notifications = await notificationRepository.getNotifications();
       emit(NotificationsLoaded(notifications));

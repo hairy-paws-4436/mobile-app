@@ -54,6 +54,18 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "https://i.postimg.cc/CKZ3dXXS/logo-hairypaws-2-modified.png"
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: "https://i.postimg.cc/wjxHxW9j/image.png"
+  android: true
+  ios: true
+
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

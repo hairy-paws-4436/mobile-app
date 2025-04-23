@@ -33,20 +33,20 @@ class Animal {
 
   factory Animal.fromJson(Map<String, dynamic> json) {
     return Animal(
-      id: json['id'],
-      name: json['name'],
-      species: json['species'],
-      breed: json['breed'],
-      age: json['age'],
-      gender: json['gender'],
-      size: json['size'],
-      color: json['color'],
-      description: json['description'],
-      images: List<String>.from(json['images']),
-      isAdopted: json['isAdopted'],
-      ownerId: json['ownerId'],
-      medicalInfo: json['medicalInfo'],
-      vaccinationStatus: json['vaccinationStatus'],
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      species: json['species'] ?? '',
+      breed: json['breed'] ?? '',
+      age: json['age'] ?? '',
+      gender: json['gender'] ?? '',
+      size: json['size'] ?? '',
+      color: json['color'] ?? '',
+      description: json['description'] ?? '',
+      images: List<String>.from(json['images']) ,
+      isAdopted: json['isAdopted'] ?? false,
+      ownerId: json['ownerId'] ?? '',
+      medicalInfo: json['medicalInfo'] ?? '',
+      vaccinationStatus: json['vaccinationStatus'] ?? '',
     );
   }
 }

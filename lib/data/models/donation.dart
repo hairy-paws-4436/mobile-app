@@ -11,9 +11,9 @@ class DonationItem {
 
   factory DonationItem.fromJson(Map<String, dynamic> json) {
     return DonationItem(
-      name: json['name'],
-      quantity: json['quantity'],
-      description: json['description'],
+      name: json['name'] ?? '',
+      quantity: json['quantity'] ?? '',
+      description: json['description'] ?? '',
     );
   }
 
@@ -58,16 +58,16 @@ class Donation {
     }
 
     return Donation(
-      id: json['id'],
-      ongId: json['ongId'],
-      donorId: json['donorId'],
-      type: json['type'],
-      amount: json['amount'],
-      transactionId: json['transactionId'],
+      id: json['id'] ?? '',
+      ongId: json['ongId'] ?? '',
+      donorId: json['donorId'] ?? '',
+      type: json['type'] ?? '',
+      amount: json['amount'] ?? 0.0,
+      transactionId: json['transactionId'] ?? '',
       items: items,
-      notes: json['notes'],
-      receipt: json['receipt'],
-      status: json['status'],
+      notes: json['notes'] ?? '',
+      receipt: json['receipt'] ?? '',
+      status: json['status'] ?? '',
     );
   }
 }

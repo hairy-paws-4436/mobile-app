@@ -17,9 +17,9 @@ class AnimalDetailsScreen extends StatefulWidget {
   final String animalId;
 
   const AnimalDetailsScreen({
-    Key? key,
+    super.key,
     required this.animalId,
-  }) : super(key: key);
+  });
 
   @override
   State<AnimalDetailsScreen> createState() => _AnimalDetailsScreenState();

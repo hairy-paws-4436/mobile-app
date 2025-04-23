@@ -13,7 +13,7 @@ import '../../common/pet_card.dart';
 
 
 class OwnerAnimalsScreen extends StatefulWidget {
-  const OwnerAnimalsScreen({Key? key}) : super(key: key);
+  const OwnerAnimalsScreen({super.key});
 
   @override
   State<OwnerAnimalsScreen> createState() => _OwnerAnimalsScreenState();

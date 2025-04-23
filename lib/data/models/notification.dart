@@ -19,13 +19,13 @@ class AppNotification {
 
   factory AppNotification.fromJson(Map<String, dynamic> json) {
     return AppNotification(
-      id: json['id'],
-      userId: json['userId'],
-      type: json['type'],
-      title: json['title'],
-      message: json['message'],
+      id: json['id'] ?? '',
+      userId: json['userId'] ?? '',
+      type: json['type'] ?? '',
+      title: json['title'] ?? '',
+      message: json['message'] ?? '',
       createdAt: DateTime.parse(json['createdAt']),
-      isRead: json['isRead'],
+      isRead: json['isRead'] ?? false,
     );
   }
 }

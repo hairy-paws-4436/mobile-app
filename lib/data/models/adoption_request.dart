@@ -19,13 +19,13 @@ class AdoptionRequest {
 
   factory AdoptionRequest.fromJson(Map<String, dynamic> json) {
     return AdoptionRequest(
-      id: json['id'],
-      animalId: json['animalId'],
-      type: json['type'],
+      id: json['id'] ?? '',
+      animalId: json['animalId'] ?? '',
+      type: json['type'] ?? '',
       visitDate: DateTime.parse(json['visitDate']),
-      notes: json['notes'],
-      status: json['status'],
-      requesterId: json['requesterId'],
+      notes: json['notes'] ?? '',
+      status: json['status'] ?? '',
+      requesterId: json['requesterId'] ?? '',
     );
   }
 

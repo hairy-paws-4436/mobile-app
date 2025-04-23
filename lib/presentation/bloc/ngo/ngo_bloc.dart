@@ -19,7 +19,9 @@ class NGOBloc extends Bloc<NGOEvent, NGOState> {
       FetchNGOsEvent event,
       Emitter<NGOState> emit,
       ) async {
-    emit(NGOLoading());
+    if (state is! NGOsLoaded) {
+      emit(NGOLoading());
+    }
     try {
       final ngos = await ngoRepository.getNGOs();
       emit(NGOsLoaded(ngos));

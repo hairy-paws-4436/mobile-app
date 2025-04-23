@@ -35,21 +35,21 @@ class NGO {
 
   factory NGO.fromJson(Map<String, dynamic> json) {
     return NGO(
-      id: json['id'],
-      name: json['name'],
-      ruc: json['ruc'],
-      description: json['description'],
-      address: json['address'],
-      phone: json['phone'],
-      email: json['email'],
-      website: json['website'],
-      mission: json['mission'],
-      vision: json['vision'],
-      bankAccount: json['bankAccount'],
-      bankName: json['bankName'],
-      interbankAccount: json['interbankAccount'],
-      logo: json['logo'],
-      ownerId: json['ownerId'],
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      ruc: json['ruc'] ?? '',
+      description: json['description'] ?? '',
+      address: json['address'] ?? '',
+      phone: json['phone'] ?? '',
+      email: json['email'] ?? '',
+      website: json['website'] ?? '',
+      mission: json['mission'] ?? '',
+      vision: json['vision'] ?? '',
+      bankAccount: json['bankAccount'] ?? '',
+      bankName: json['bankName'] ?? '',
+      interbankAccount: json['interbankAccount'] ?? '',
+      logo: json['logo'] ?? '',
+      ownerId: json['ownerId'] ?? '',
     );
   }
 }

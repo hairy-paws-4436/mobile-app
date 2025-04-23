@@ -21,6 +21,10 @@ class AnimalBloc extends Bloc<AnimalEvent, AnimalState> {
       FetchAnimalsEvent event,
       Emitter<AnimalState> emit,
       ) async {
+
+    if (state is AnimalsLoaded) {
+      return;
+    }
     emit(AnimalLoading());
     try {
       final animals = await animalRepository.getAnimals();

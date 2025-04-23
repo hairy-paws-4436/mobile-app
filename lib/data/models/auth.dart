@@ -60,7 +60,7 @@ class AuthResponse {
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) {
     return AuthResponse(
-      token: json['token'],
+      token: json['access_token'],
       user: User.fromJson(json['user']),
     );
   }
