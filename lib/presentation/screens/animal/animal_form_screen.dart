@@ -387,7 +387,7 @@ class _AnimalFormScreenState extends State<AnimalFormScreen> {
                         children: [
                           Expanded(
                             child: RadioListTile<String>(
-                              title: const Text('Small'),
+                              title: const Text('S'),
                               value: 'small',
                               groupValue: _size,
                               onChanged: (value) {
@@ -399,7 +399,7 @@ class _AnimalFormScreenState extends State<AnimalFormScreen> {
                           ),
                           Expanded(
                             child: RadioListTile<String>(
-                              title: const Text('Medium'),
+                              title: const Text('M'),
                               value: 'medium',
                               groupValue: _size,
                               onChanged: (value) {
@@ -411,7 +411,7 @@ class _AnimalFormScreenState extends State<AnimalFormScreen> {
                           ),
                           Expanded(
                             child: RadioListTile<String>(
-                              title: const Text('Large'),
+                              title: const Text('L'),
                               value: 'large',
                               groupValue: _size,
                               onChanged: (value) {

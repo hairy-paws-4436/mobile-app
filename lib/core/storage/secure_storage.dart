@@ -7,15 +7,15 @@ class SecureStorage {
 
   // Token
   Future<void> saveToken(String token) async {
-    await storage.write(key: 'token', value: token);
+    await storage.write(key: 'access_token', value: token);
   }
 
   Future<String?> getToken() async {
-    return await storage.read(key: 'token');
+    return await storage.read(key: 'access_token');
   }
 
   Future<void> deleteToken() async {
-    await storage.delete(key: 'token');
+    await storage.delete(key: 'access_token');
   }
 
   // User
