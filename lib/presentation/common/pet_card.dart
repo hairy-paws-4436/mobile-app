@@ -7,13 +7,14 @@ class PetCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const PetCard({
-    Key? key,
+    super.key,
     required this.animal,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
+
     return Card(
       elevation: 3,
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -80,7 +81,7 @@ class PetCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      if (animal.isAdopted)
+                      /*if (isAdopted)
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8.0,
@@ -91,19 +92,19 @@ class PetCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           child: const Text(
-                            'Adopted',
+                            'Adoptado',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
+                        ),*/
                     ],
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '${animal.breed} · ${animal.age} years old',
+                    '${animal.breed} · ${animal.age} años',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -112,7 +113,7 @@ class PetCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      _buildInfoChip(Icons.pets, animal.species),
+                      _buildInfoChip(Icons.pets, animal.type),
                       const SizedBox(width: 8),
                       _buildInfoChip(
                         animal.gender.toLowerCase() == 'male'
@@ -121,7 +122,25 @@ class PetCard extends StatelessWidget {
                         animal.gender,
                       ),
                       const SizedBox(width: 8),
-                      _buildInfoChip(Icons.straighten, animal.size),
+                      _buildInfoChip(Icons.monitor_weight, '${animal.weight} kg'),
+                    ],
+                  ),
+
+                  // Indicadores de salud
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      _buildStatusChip(
+                          Icons.vaccines,
+                          'Vacunado',
+                          animal.vaccinated
+                      ),
+                      const SizedBox(width: 8),
+                      _buildStatusChip(
+                          Icons.cut,
+                          'Esterilizado',
+                          animal.sterilized
+                      ),
                     ],
                   ),
                 ],
@@ -154,6 +173,36 @@ class PetCard extends StatelessWidget {
             style: const TextStyle(
               fontSize: 12,
               color: AppTheme.primaryColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusChip(IconData icon, String text, bool isActive) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      decoration: BoxDecoration(
+        color: isActive
+            ? Colors.green.withOpacity(0.1)
+            : Colors.grey.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 16,
+            color: isActive ? Colors.green : Colors.grey,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 12,
+              color: isActive ? Colors.green : Colors.grey,
             ),
           ),
         ],

@@ -1,52 +1,51 @@
 class Animal {
   final String id;
   final String name;
-  final String species;
+  final String type;
   final String breed;
   final int age;
   final String gender;
-  final String size;
-  final String color;
   final String description;
+  final double weight;
+  final String healthDetails;
+  final bool vaccinated;
+  final bool sterilized ;
   final List<String> images;
-  final bool isAdopted;
-  final String ownerId;
-  final String? medicalInfo;
-  final String? vaccinationStatus;
+  final String? ownerId;
 
   Animal({
     required this.id,
     required this.name,
-    required this.species,
+    required this.type,
     required this.breed,
     required this.age,
     required this.gender,
-    required this.size,
-    required this.color,
     required this.description,
+    required this.weight,
+    required this.healthDetails,
+    required this.vaccinated,
+    required this.sterilized ,
     required this.images,
-    required this.isAdopted,
     required this.ownerId,
-    this.medicalInfo,
-    this.vaccinationStatus,
   });
 
   factory Animal.fromJson(Map<String, dynamic> json) {
     return Animal(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
-      species: json['species'] ?? '',
+      type: json['type'] ?? '',
       breed: json['breed'] ?? '',
-      age: json['age'] ?? '',
+      age: json['age'] is int ? json['age'] : int.tryParse(json['age']?.toString() ?? '0') ?? 0,
       gender: json['gender'] ?? '',
-      size: json['size'] ?? '',
-      color: json['color'] ?? '',
       description: json['description'] ?? '',
+      weight: json['weight'] is double
+          ? json['weight']
+          : double.tryParse(json['weight']?.toString() ?? '0.0') ?? 0.0,
+      healthDetails: json['healthDetails'] ?? '',
+      vaccinated : json['vaccinated'] ?? false,
+      sterilized : json['sterilized'] ?? false,
       images: List<String>.from(json['images']) ,
-      isAdopted: json['isAdopted'] ?? false,
       ownerId: json['ownerId'] ?? '',
-      medicalInfo: json['medicalInfo'] ?? '',
-      vaccinationStatus: json['vaccinationStatus'] ?? '',
     );
   }
 }

@@ -10,6 +10,7 @@ import '../../../data/models/user.dart';
 import '../../../di/injection_container.dart';
 import '../../bloc/animal/animal_bloc.dart';
 import '../../bloc/animal/animal_event.dart';
+import '../../bloc/animal/animal_state.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
 import '../../bloc/event/event_bloc.dart';
@@ -41,12 +42,35 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _loadData();
+    _loadInitialData();
   }
 
-  void _loadData() {
-    // Load initial data for all tabs
-    context.read<AnimalBloc>().add(FetchAnimalsEvent());
+  void _onTabChanged(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        context.read<AnimalBloc>().add(FetchAnimalsEvent());
+        break;
+      case 1:
+        context.read<NGOBloc>().add(FetchNGOsEvent());
+        break;
+      case 2:
+        context.read<EventBloc>().add(FetchEventsEvent());
+        break;
+      case 3:
+        context.read<NotificationBloc>().add(FetchNotificationsEvent());
+        break;
+    }
+  }
+
+  void _loadInitialData() {
+    if (context.read<AnimalBloc>().state is! AnimalsLoaded) {
+      context.read<AnimalBloc>().add(FetchAnimalsEvent());
+    }
+
     context.read<NGOBloc>().add(FetchNGOsEvent());
     context.read<EventBloc>().add(FetchEventsEvent());
     context.read<NotificationBloc>().add(FetchNotificationsEvent());
@@ -97,11 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: _currentIndex,
-              onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
+              onTap: _onTabChanged,
               type: BottomNavigationBarType.fixed,
               selectedItemColor: AppTheme.primaryColor,
               unselectedItemColor: Colors.grey,

@@ -42,3 +42,12 @@ class ProfileUpdateSuccess extends AuthState {
   @override
   List<Object?> get props => [user];
 }
+
+class RequiresTwoFactor extends AuthState {
+  final String userId;
+
+  RequiresTwoFactor({required this.userId});
+
+  @override
+  List<Object?> get props => [userId];
+}

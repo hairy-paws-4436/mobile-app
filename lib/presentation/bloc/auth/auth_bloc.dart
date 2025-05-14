@@ -50,7 +50,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ) async {
     emit(AuthLoading());
     try {
-      final user = await authRepository.login(event.email, event.password);
+      final response = await authRepository.login(event.email, event.password);
+
+      // Verificar si requiere autenticación de dos factores
+      if (response.requiresTwoFactor) {
+        emit(RequiresTwoFactor(userId: response.userId!));
+      } else {
+        // Login normal
+        emit(Authenticated(user: response.user!));
+      }
+    } catch (e) {
+      emit(AuthError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onVerify2FA(
+      Verify2FAEvent event,
+      Emitter<AuthState> emit,
+      ) async {
+    emit(AuthLoading());
+    try {
+      final user = await authRepository.verify2FA(event.userId, event.token);
       emit(Authenticated(user: user));
     } catch (e) {
       emit(AuthError(message: e.toString()));
@@ -71,6 +91,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         phoneNumber: event.phoneNumber,
         role: event.role,
         address: event.address,
+        identityDocument: event.identityDocument,
       );
 
       final user = await authRepository.register(registerRequest);
@@ -101,22 +122,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await authRepository.enable2FA();
       emit(Enable2FASuccess());
-
-      // Refresh user state
-      final user = await authRepository.getUserProfile();
-      emit(Authenticated(user: user));
-    } catch (e) {
-      emit(AuthError(message: e.toString()));
-    }
-  }
-
-  Future<void> _onVerify2FA(
-      Verify2FAEvent event,
-      Emitter<AuthState> emit,
-      ) async {
-    emit(AuthLoading());
-    try {
-      await authRepository.verify2FA(event.userId, event.token);
 
       // Refresh user state
       final user = await authRepository.getUserProfile();

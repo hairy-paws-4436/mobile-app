@@ -4,6 +4,7 @@ class User {
   final String firstName;
   final String lastName;
   final String phoneNumber;
+  final String? identityDocument;
   final String role;
   final String address;
   final bool is2faEnabled;
@@ -14,6 +15,7 @@ class User {
     required this.firstName,
     required this.lastName,
     required this.phoneNumber,
+    this.identityDocument,
     required this.role,
     required this.address,
     this.is2faEnabled = false,
@@ -26,6 +28,7 @@ class User {
       firstName: json['firstName'] ?? '',
       lastName: json['lastName'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
+      identityDocument: json['identityDocument'] ?? '',
       role: json['role'] ?? '',
       address: json['address'] ?? '',
       is2faEnabled: json['is2faEnabled'] ?? false,
@@ -39,6 +42,7 @@ class User {
       'firstName': firstName,
       'lastName': lastName,
       'phoneNumber': phoneNumber,
+      'identityDocument': identityDocument,
       'role': role,
       'address': address,
       'is2faEnabled': is2faEnabled,

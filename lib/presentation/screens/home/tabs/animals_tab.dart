@@ -22,7 +22,7 @@ class _AnimalsTabState extends State<AnimalsTab> {
   String _searchQuery = '';
   String _selectedSpecies = 'All';
 
-  final List<String> _speciesOptions = ['All', 'Dog', 'Cat', 'Bird', 'Rabbit', 'Other'];
+  final List<String> _speciesOptions = ['cat', 'dog'];
 
   @override
   void dispose() {
@@ -213,7 +213,7 @@ class _AnimalsTabState extends State<AnimalsTab> {
   List<Animal> _filterAnimals(List<Animal> animals) {
     return animals.where((animal) {
       // Apply species filter
-      if (_selectedSpecies != 'All' && animal.species != _selectedSpecies) {
+      if (_selectedSpecies != 'All' && animal.type != _selectedSpecies) {
         return false;
       }
 

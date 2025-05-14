@@ -50,7 +50,7 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
       builder: (context, state) {
         if (state is AnimalLoading) {
           return const Scaffold(
-            body: LoadingIndicator(message: 'Loading pet details...'),
+            body: LoadingIndicator(message: 'Cargando detalles de la mascota...'),
           );
         } else if (state is AnimalError) {
           return Scaffold(
@@ -67,7 +67,7 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
         }
 
         return const Scaffold(
-          body: LoadingIndicator(message: 'Loading pet details...'),
+          body: LoadingIndicator(message: 'Cargando detalles de la mascota...'),
         );
       },
     );
@@ -78,6 +78,8 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
       builder: (context, authState) {
         late User currentUser;
         bool isOwner = false;
+        // Determinar si está adoptado basado en si tiene un ownerId
+        bool isAdopted = animal.ownerId != null && animal.ownerId!.isNotEmpty;
 
         if (authState is Authenticated) {
           currentUser = authState.user;
@@ -104,7 +106,7 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
                             children: [
                               Icon(Icons.edit, color: AppTheme.primaryColor),
                               SizedBox(width: 8),
-                              Text('Edit'),
+                              Text('Editar'),
                             ],
                           ),
                         ),
@@ -114,7 +116,7 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
                             children: [
                               Icon(Icons.delete, color: Colors.red),
                               SizedBox(width: 8),
-                              Text('Delete', style: TextStyle(color: Colors.red)),
+                              Text('Eliminar', style: TextStyle(color: Colors.red)),
                             ],
                           ),
                         ),
@@ -154,7 +156,7 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
                               ),
                             ),
                           ),
-                          if (animal.isAdopted)
+                          if (isAdopted)
                             Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 12,
@@ -165,7 +167,7 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: const Text(
-                                'Adopted',
+                                'Adoptado',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -176,10 +178,10 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Pet Specs
+                      // Pet Specs - Primera fila
                       Row(
                         children: [
-                          _buildInfoChip(Icons.pets, animal.species),
+                          _buildInfoChip(Icons.pets, animal.type),
                           const SizedBox(width: 8),
                           _buildInfoChip(
                             animal.gender.toLowerCase() == 'male'
@@ -190,25 +192,25 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
                           const SizedBox(width: 8),
                           _buildInfoChip(
                             Icons.cake,
-                            '${animal.age} ${animal.age == 1 ? 'year' : 'years'}',
+                            '${animal.age} ${animal.age == 1 ? 'año' : 'años'}',
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
+
+                      // Pet Specs - Segunda fila (Peso y Raza)
                       Row(
                         children: [
-                          _buildInfoChip(Icons.straighten, animal.size),
+                          _buildInfoChip(Icons.monitor_weight, '${animal.weight} kg'),
                           const SizedBox(width: 8),
-                          _buildInfoChip(Icons.palette, animal.color),
-                          const SizedBox(width: 8),
-                          _buildInfoChip(Icons.category, animal.breed),
+                          _buildInfoChip(Icons.pets_outlined, animal.breed),
                         ],
                       ),
                       const SizedBox(height: 24),
 
                       // Description
                       const Text(
-                        'About',
+                        'Acerca de',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -224,91 +226,80 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
                       ),
                       const SizedBox(height: 24),
 
-                      // Medical Info
-                      if (animal.medicalInfo != null && animal.medicalInfo!.isNotEmpty)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Medical Information',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                      // Health Details
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Información de Salud',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(height: 8),
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.blue.withOpacity(0.3)),
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.medical_services,
-                                    color: Colors.blue,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      animal.medicalInfo!,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        height: 1.5,
-                                      ),
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.medical_services,
+                                  color: Colors.blue,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    animal.healthDetails,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      height: 1.5,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 24),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+                      ),
 
-                      // Vaccination Status
-                      if (animal.vaccinationStatus != null && animal.vaccinationStatus!.isNotEmpty)
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Vaccination Status',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                      // Estado de vacunación y esterilización
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Estado Sanitario',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(height: 8),
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.green.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.green.withOpacity(0.3)),
+                          ),
+                          const SizedBox(height: 8),
+
+                          // Chips para vacunado y esterilizado
+                          Row(
+                            children: [
+                              _buildStatusChip(
+                                  Icons.vaccines,
+                                  'Vacunado',
+                                  animal.vaccinated
                               ),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.verified,
-                                    color: Colors.green,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      animal.vaccinationStatus!,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        height: 1.5,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              const SizedBox(width: 16),
+                              _buildStatusChip(
+                                  Icons.cut,
+                                  'Esterilizado',
+                                  animal.sterilized
                               ),
-                            ),
-                            const SizedBox(height: 24),
-                          ],
-                        ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -316,7 +307,7 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
             ],
           ),
           // Bottom Buttons
-          bottomNavigationBar: !animal.isAdopted && !isOwner && authState is Authenticated
+          bottomNavigationBar: !isOwner && authState is Authenticated
               ? SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -325,7 +316,7 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
                   // Visit Button
                   Expanded(
                     child: CustomButton(
-                      text: 'Schedule Visit',
+                      text: 'Programar Visita',
                       type: ButtonType.secondary,
                       onPressed: () {
                         Navigator.pushNamed(
@@ -343,7 +334,7 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
                   // Adopt Button
                   Expanded(
                     child: CustomButton(
-                      text: 'Adopt Pet',
+                      text: 'Adoptar Mascota',
                       onPressed: () {
                         Navigator.pushNamed(
                           context,
@@ -467,31 +458,70 @@ class _AnimalDetailsScreenState extends State<AnimalDetailsScreen> {
     );
   }
 
+  Widget _buildStatusChip(IconData icon, String text, bool isActive) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 6,
+      ),
+      decoration: BoxDecoration(
+        color: isActive
+            ? Colors.green.withOpacity(0.1)
+            : Colors.grey.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isActive
+              ? Colors.green.withOpacity(0.3)
+              : Colors.grey.withOpacity(0.3),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 16,
+            color: isActive ? Colors.green : Colors.grey,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 14,
+              color: isActive ? Colors.green : Colors.grey,
+              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showDeleteConfirmationDialog(BuildContext context, Animal animal) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Pet'),
+        title: const Text('Eliminar Mascota'),
         content: Text(
-          'Are you sure you want to delete ${animal.name}? This action cannot be undone.',
+          '¿Estás seguro que deseas eliminar a ${animal.name}? Esta acción no se puede deshacer.',
         ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('Cancel'),
+            child: const Text('Cancelar'),
           ),
           ElevatedButton(
             onPressed: () {
               context.read<AnimalBloc>().add(DeleteAnimalEvent(animal.id));
-              Navigator.pop(context); // Close dialog
-              Navigator.pop(context); // Return to previous screen
+              Navigator.pop(context); // Cerrar diálogo
+              Navigator.pop(context); // Volver a la pantalla anterior
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            child: const Text('Delete'),
+            child: const Text('Eliminar'),
           ),
         ],
       ),

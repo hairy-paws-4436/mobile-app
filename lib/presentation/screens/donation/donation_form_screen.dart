@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 
 import '../../../config/theme.dart';
 import '../../../data/models/donation.dart';
@@ -37,7 +38,7 @@ class _DonationFormScreenState extends State<DonationFormScreen> {
   final _notesController = TextEditingController();
 
   String _donationType = 'money';
-  List<DonationItem> _items = [];
+  final List<DonationItem> _items = [];
   XFile? _receiptImage;
   final _imagePicker = ImagePicker();
 
@@ -473,6 +474,9 @@ class _DonationFormScreenState extends State<DonationFormScreen> {
                     'notes': _notesController.text,
                     'items': _donationType == 'items' ? _items.map((item) => item.toJson()).toList() : null,
                   };
+
+                  final logger = Logger();
+                  logger.d(donationData);
 
                   context.read<DonationBloc>().add(
                     CreateDonationEvent(

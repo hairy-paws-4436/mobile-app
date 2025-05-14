@@ -15,6 +15,7 @@ class RegisterEvent extends AuthEvent {
   final String firstName;
   final String lastName;
   final String phoneNumber;
+  final String identityDocument;
   final String role;
   final String address;
 
@@ -24,6 +25,7 @@ class RegisterEvent extends AuthEvent {
     required this.firstName,
     required this.lastName,
     required this.phoneNumber,
+    required this.identityDocument,
     required this.role,
     required this.address,
   });

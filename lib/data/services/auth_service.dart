@@ -9,13 +9,23 @@ class AuthService {
 
   AuthService({required this.apiClient});
 
-  Future<AuthResponse> login(String email, String password) async {
+  Future<LoginResponse> login(String email, String password) async {
     final requestBody = AuthRequest(
       email: email,
       password: password,
     ).toJson();
 
     final response = await apiClient.post('/api/auth/login', body: requestBody);
+    return LoginResponse.fromJson(response);
+  }
+
+  Future<AuthResponse> verify2FA(String userId, String token) async {
+    final requestBody = TwoFactorVerifyRequest(
+      userId: userId,
+      token: token,
+    ).toJson();
+
+    final response = await apiClient.post('/api/auth/2fa/verify', body: requestBody);
     return AuthResponse.fromJson(response);
   }
 
@@ -31,10 +41,6 @@ class AuthService {
 
   Future<void> enable2FA() async {
     await apiClient.post('/api/auth/2fa/enable');
-  }
-
-  Future<void> verify2FA(TwoFactorVerifyRequest request) async {
-    await apiClient.post('/api/auth/2fa/verify', body: request.toJson());
   }
 
   Future<void> changePassword(String currentPassword, String newPassword) async {

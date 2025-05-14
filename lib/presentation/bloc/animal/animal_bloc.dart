@@ -4,7 +4,6 @@ import '../../../data/repositories/animal_repository.dart';
 import 'animal_event.dart';
 import 'animal_state.dart';
 
-
 class AnimalBloc extends Bloc<AnimalEvent, AnimalState> {
   final AnimalRepository animalRepository;
 
@@ -18,14 +17,13 @@ class AnimalBloc extends Bloc<AnimalEvent, AnimalState> {
   }
 
   Future<void> _onFetchAnimals(
-      FetchAnimalsEvent event,
-      Emitter<AnimalState> emit,
-      ) async {
-
-    if (state is AnimalsLoaded) {
-      return;
+    FetchAnimalsEvent event,
+    Emitter<AnimalState> emit,
+  ) async {
+    if (state is! AnimalsLoaded) {
+      emit(AnimalLoading());
     }
-    emit(AnimalLoading());
+
     try {
       final animals = await animalRepository.getAnimals();
       emit(AnimalsLoaded(animals));
@@ -35,9 +33,9 @@ class AnimalBloc extends Bloc<AnimalEvent, AnimalState> {
   }
 
   Future<void> _onFetchAnimalDetails(
-      FetchAnimalDetailsEvent event,
-      Emitter<AnimalState> emit,
-      ) async {
+    FetchAnimalDetailsEvent event,
+    Emitter<AnimalState> emit,
+  ) async {
     emit(AnimalLoading());
     try {
       final animal = await animalRepository.getAnimalDetails(event.animalId);
@@ -48,9 +46,9 @@ class AnimalBloc extends Bloc<AnimalEvent, AnimalState> {
   }
 
   Future<void> _onFetchOwnerAnimals(
-      FetchOwnerAnimalsEvent event,
-      Emitter<AnimalState> emit,
-      ) async {
+    FetchOwnerAnimalsEvent event,
+    Emitter<AnimalState> emit,
+  ) async {
     emit(AnimalLoading());
     try {
       final animals = await animalRepository.getOwnerAnimals();
@@ -61,9 +59,9 @@ class AnimalBloc extends Bloc<AnimalEvent, AnimalState> {
   }
 
   Future<void> _onCreateAnimal(
-      CreateAnimalEvent event,
-      Emitter<AnimalState> emit,
-      ) async {
+    CreateAnimalEvent event,
+    Emitter<AnimalState> emit,
+  ) async {
     emit(AnimalLoading());
     try {
       final animal = await animalRepository.createAnimal(
@@ -77,9 +75,9 @@ class AnimalBloc extends Bloc<AnimalEvent, AnimalState> {
   }
 
   Future<void> _onUpdateAnimal(
-      UpdateAnimalEvent event,
-      Emitter<AnimalState> emit,
-      ) async {
+    UpdateAnimalEvent event,
+    Emitter<AnimalState> emit,
+  ) async {
     emit(AnimalLoading());
     try {
       final animal = await animalRepository.updateAnimal(
@@ -93,9 +91,9 @@ class AnimalBloc extends Bloc<AnimalEvent, AnimalState> {
   }
 
   Future<void> _onDeleteAnimal(
-      DeleteAnimalEvent event,
-      Emitter<AnimalState> emit,
-      ) async {
+    DeleteAnimalEvent event,
+    Emitter<AnimalState> emit,
+  ) async {
     emit(AnimalLoading());
     try {
       await animalRepository.deleteAnimal(event.animalId);

@@ -67,7 +67,7 @@ class ProfileTab extends StatelessWidget {
 
                   // User Email
                   Text(
-                    user.email!,
+                    user.email,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[600],
@@ -163,7 +163,7 @@ class ProfileTab extends StatelessWidget {
           ),
 
           // NGO Registration (for adopters and owners)
-          if (user.role != 'ngo')
+          if (user.role != 'ong')
             _buildMenuOption(
               context,
               icon: Icons.business,
@@ -174,7 +174,7 @@ class ProfileTab extends StatelessWidget {
             ),
 
           // NGO Details (for NGO role)
-          if (user.role == 'ngo')
+          if (user.role == 'ong')
             _buildMenuOption(
               context,
               icon: Icons.business,
@@ -332,7 +332,7 @@ class ProfileTab extends StatelessWidget {
         return Colors.blue;
       case 'owner':
         return Colors.green;
-      case 'ngo':
+      case 'ong':
         return Colors.purple;
       default:
         return AppTheme.primaryColor;
@@ -345,7 +345,7 @@ class ProfileTab extends StatelessWidget {
         return 'Pet Adopter';
       case 'owner':
         return 'Pet Owner';
-      case 'ngo':
+      case 'ong':
         return 'NGO Admin';
       default:
         return role;

@@ -36,7 +36,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => ApiClient(
     httpClient: sl(),
     secureStorage: sl(),
-    baseUrl: 'http://192.168.18.224:3000', // Replace with your API URL
+    baseUrl: 'http://192.168.18.65:3000', // Replace with your API URL
   ));
 
   // Services

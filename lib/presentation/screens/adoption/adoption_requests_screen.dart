@@ -179,7 +179,7 @@ class _AdoptionRequestsScreenState extends State<AdoptionRequestsScreen> with Si
                     ),
                     const Spacer(),
                     Text(
-                      DateFormat('MMM d, y · h:mm a').format(request.visitDate),
+                      DateFormat('MMM d, y · h:mm a').format(request.visitDate!),
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],

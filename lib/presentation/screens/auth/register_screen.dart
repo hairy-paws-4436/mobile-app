@@ -22,6 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _identityDocument = TextEditingController();
   final _addressController = TextEditingController();
 
   String _selectedRole = 'adopter';
@@ -36,6 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _firstNameController.dispose();
     _lastNameController.dispose();
     _phoneController.dispose();
+    _identityDocument.dispose();
     _addressController.dispose();
     super.dispose();
   }
@@ -179,6 +181,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         const SizedBox(height: 16),
+
+                        TextFormField(
+                          controller: _identityDocument,
+                          decoration: const InputDecoration(
+                            labelText: 'Identity Document (DNI)',
+                            hintText: 'Enter your identity document',
+                            prefixIcon: Icon(Icons.verified_user_rounded),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your identity document';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+
 
                         // Address
                         TextFormField(
@@ -344,6 +363,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   firstName: _firstNameController.text.trim(),
                                   lastName: _lastNameController.text.trim(),
                                   phoneNumber: _phoneController.text.trim(),
+                                  identityDocument: _identityDocument.text.trim(),
                                   role: _selectedRole,
                                   address: _addressController.text.trim(),
                                 ),

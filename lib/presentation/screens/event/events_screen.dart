@@ -187,7 +187,7 @@ class _EventsScreenState extends State<EventsScreen> {
           ),
         ],
       ),
-      floatingActionButton: _currentUser != null && _currentUser!.role == 'ngo'
+      floatingActionButton: _currentUser!.role == 'ong'
           ? FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, '/event-form');

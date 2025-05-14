@@ -25,11 +25,19 @@ class AuthRepository {
     return User.fromJson(json.decode(userJson));
   }
 
-  Future<User> login(String email, String password) async {
+  Future<LoginResponse> login(String email, String password) async {
     try {
       final response = await authService.login(email, password);
-      await _saveAuthData(response);
-      return response.user;
+
+      // Si no requiere 2FA, guarda los datos de sesión
+      if (!response.requiresTwoFactor && response.token != null && response.user != null) {
+        await _saveAuthData(AuthResponse(
+          token: response.token!,
+          user: response.user!,
+        ));
+      }
+
+      return response;
     } catch (e) {
       throw e;
     }
@@ -53,9 +61,11 @@ class AuthRepository {
     }
   }
 
-  Future<void> verify2FA(String userId, String token) async {
+  Future<User> verify2FA(String userId, String token) async {
     try {
-      await authService.verify2FA(TwoFactorVerifyRequest(userId: userId, token: token));
+      final response = await authService.verify2FA(userId, token);
+      await _saveAuthData(response);
+      return response.user;
     } catch (e) {
       throw e;
     }

@@ -1,5 +1,37 @@
 import 'package:mobile_app/data/models/user.dart';
 
+// Agregar una nueva clase para la respuesta inicial de login
+class LoginResponse {
+  final String? token;
+  final User? user;
+  final bool requiresTwoFactor;
+  final String? userId;
+
+  LoginResponse({
+    this.token,
+    this.user,
+    this.requiresTwoFactor = false,
+    this.userId,
+  });
+
+  factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    // Verificar si requiere 2FA
+    if (json['requiresTwoFactor'] == true) {
+      return LoginResponse(
+        requiresTwoFactor: true,
+        userId: json['userId'] ?? '',
+      );
+    }
+
+    // Caso normal (sin 2FA)
+    return LoginResponse(
+      token: json['access_token'] ?? '',
+      user: json['user'] != null ? User.fromJson(json['user']) : null,
+      requiresTwoFactor: false,
+    );
+  }
+}
+
 class AuthRequest {
   final String email;
   final String password;
@@ -23,6 +55,7 @@ class RegisterRequest {
   final String firstName;
   final String lastName;
   final String phoneNumber;
+  final String identityDocument;
   final String role;
   final String address;
 
@@ -32,6 +65,7 @@ class RegisterRequest {
     required this.firstName,
     required this.lastName,
     required this.phoneNumber,
+    required this.identityDocument,
     required this.role,
     required this.address,
   });
@@ -43,6 +77,7 @@ class RegisterRequest {
       'firstName': firstName,
       'lastName': lastName,
       'phoneNumber': phoneNumber,
+      'identityDocument': identityDocument,
       'role': role,
       'address': address,
     };

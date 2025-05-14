@@ -19,14 +19,12 @@ class AdoptionRequestFormScreen extends StatefulWidget {
   final String animalId;
   final String? type; // 'adoption' or 'visit'
 
-  const AdoptionRequestFormScreen({
-    Key? key,
-    required this.animalId,
-    this.type,
-  }) : super(key: key);
+  const AdoptionRequestFormScreen({Key? key, required this.animalId, this.type})
+    : super(key: key);
 
   @override
-  State<AdoptionRequestFormScreen> createState() => _AdoptionRequestFormScreenState();
+  State<AdoptionRequestFormScreen> createState() =>
+      _AdoptionRequestFormScreenState();
 }
 
 class _AdoptionRequestFormScreenState extends State<AdoptionRequestFormScreen> {
@@ -60,7 +58,9 @@ class _AdoptionRequestFormScreenState extends State<AdoptionRequestFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_requestType == 'adoption' ? 'Adoption Request' : 'Schedule Visit'),
+        title: Text(
+          _requestType == 'adoption' ? 'Adoption Request' : 'Schedule Visit',
+        ),
       ),
       body: BlocConsumer<AdoptionBloc, AdoptionState>(
         listener: (context, state) {
@@ -85,12 +85,16 @@ class _AdoptionRequestFormScreenState extends State<AdoptionRequestFormScreen> {
           return BlocBuilder<AnimalBloc, AnimalState>(
             builder: (context, animalState) {
               if (animalState is AnimalLoading) {
-                return const LoadingIndicator(message: 'Loading pet details...');
+                return const LoadingIndicator(
+                  message: 'Loading pet details...',
+                );
               } else if (animalState is AnimalError) {
                 return ErrorDisplay(
                   message: animalState.message,
                   onRetry: () {
-                    context.read<AnimalBloc>().add(FetchAnimalDetailsEvent(widget.animalId));
+                    context.read<AnimalBloc>().add(
+                      FetchAnimalDetailsEvent(widget.animalId),
+                    );
                   },
                 );
               } else if (animalState is AnimalDetailsLoaded) {
@@ -106,7 +110,11 @@ class _AdoptionRequestFormScreenState extends State<AdoptionRequestFormScreen> {
     );
   }
 
-  Widget _buildContent(BuildContext context, Animal animal, AdoptionState state) {
+  Widget _buildContent(
+    BuildContext context,
+    Animal animal,
+    AdoptionState state,
+  ) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Form(
@@ -127,33 +135,35 @@ class _AdoptionRequestFormScreenState extends State<AdoptionRequestFormScreen> {
                     // Pet Image
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
-                      child: animal.images.isNotEmpty
-                          ? Image.network(
-                        animal.images.first,
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          width: 80,
-                          height: 80,
-                          color: Colors.grey[300],
-                          child: Icon(
-                            Icons.pets,
-                            size: 40,
-                            color: Colors.grey[400],
-                          ),
-                        ),
-                      )
-                          : Container(
-                        width: 80,
-                        height: 80,
-                        color: Colors.grey[300],
-                        child: Icon(
-                          Icons.pets,
-                          size: 40,
-                          color: Colors.grey[400],
-                        ),
-                      ),
+                      child:
+                          animal.images.isNotEmpty
+                              ? Image.network(
+                                animal.images.first,
+                                width: 80,
+                                height: 80,
+                                fit: BoxFit.cover,
+                                errorBuilder:
+                                    (context, error, stackTrace) => Container(
+                                      width: 80,
+                                      height: 80,
+                                      color: Colors.grey[300],
+                                      child: Icon(
+                                        Icons.pets,
+                                        size: 40,
+                                        color: Colors.grey[400],
+                                      ),
+                                    ),
+                              )
+                              : Container(
+                                width: 80,
+                                height: 80,
+                                color: Colors.grey[300],
+                                child: Icon(
+                                  Icons.pets,
+                                  size: 40,
+                                  color: Colors.grey[400],
+                                ),
+                              ),
                     ),
                     const SizedBox(width: 16),
                     // Pet Details
@@ -178,7 +188,7 @@ class _AdoptionRequestFormScreenState extends State<AdoptionRequestFormScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '${animal.gender} · ${animal.size}',
+                            '${animal.gender} · ${animal.weight}',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],
@@ -196,10 +206,7 @@ class _AdoptionRequestFormScreenState extends State<AdoptionRequestFormScreen> {
             // Request Type
             const Text(
               'Request Type',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Row(
@@ -237,10 +244,7 @@ class _AdoptionRequestFormScreenState extends State<AdoptionRequestFormScreen> {
             // Visit Date
             const Text(
               'Visit Date',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             InkWell(
@@ -270,10 +274,7 @@ class _AdoptionRequestFormScreenState extends State<AdoptionRequestFormScreen> {
             // Visit Time
             const Text(
               'Visit Time',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             InkWell(
@@ -303,17 +304,15 @@ class _AdoptionRequestFormScreenState extends State<AdoptionRequestFormScreen> {
             // Notes
             const Text(
               'Additional Notes',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             TextFormField(
               controller: _notesController,
               maxLines: 4,
               decoration: const InputDecoration(
-                hintText: 'Add any additional information or questions you have...',
+                hintText:
+                    'Add any additional information or questions you have...',
                 border: OutlineInputBorder(),
               ),
               validator: (value) {
@@ -327,7 +326,10 @@ class _AdoptionRequestFormScreenState extends State<AdoptionRequestFormScreen> {
 
             // Submit Button
             CustomButton(
-              text: _requestType == 'adoption' ? 'Submit Adoption Request' : 'Schedule Visit',
+              text:
+                  _requestType == 'adoption'
+                      ? 'Submit Adoption Request'
+                      : 'Schedule Visit',
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   final visitDateTime = DateTime(
@@ -338,19 +340,36 @@ class _AdoptionRequestFormScreenState extends State<AdoptionRequestFormScreen> {
                     _selectedTime.minute,
                   );
 
-                  final adoptionRequest = AdoptionRequest(
-                    id: '', // Will be generated on the server
-                    animalId: animal.id,
-                    type: _requestType,
-                    visitDate: visitDateTime,
-                    notes: _notesController.text,
-                    status: 'pending',
-                    requesterId: '', // Will be set by the server
-                  );
+                  if (_requestType == 'adoption') {
+                    final adoptionRequest = AdoptionRequest(
+                      id: '',
+                      // Will be generated on the server
+                      animalId: animal.id,
+                      type: _requestType,
+                      notes: _notesController.text,
+                      status: 'pending',
+                      requesterId: '', // Will be set by the server
+                    );
+                    context.read<AdoptionBloc>().add(
+                      CreateAdoptionRequestEvent(adoptionRequest),
+                    );
+                  }
+                  if (_requestType == 'visit') {
+                    final adoptionRequest = AdoptionRequest(
+                      id: '',
+                      // Will be generated on the server
+                      animalId: animal.id,
+                      type: _requestType,
+                      visitDate: visitDateTime,
+                      notes: _notesController.text,
+                      status: 'pending',
+                      requesterId: '', // Will be set by the server
+                    );
+                    context.read<AdoptionBloc>().add(
+                      CreateAdoptionRequestEvent(adoptionRequest),
+                    );
+                  }
 
-                  context.read<AdoptionBloc>().add(
-                    CreateAdoptionRequestEvent(adoptionRequest),
-                  );
                 }
               },
               isLoading: state is AdoptionLoading,

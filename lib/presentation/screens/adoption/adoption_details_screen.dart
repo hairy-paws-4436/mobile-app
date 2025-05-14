@@ -261,13 +261,13 @@ class _AdoptionDetailsScreenState extends State<AdoptionDetailsScreen> {
                       _buildInfoRow(
                         Icons.calendar_today,
                         'Requested Date',
-                        DateFormat('EEEE, MMMM d, y').format(request.visitDate),
+                        DateFormat('EEEE, MMMM d, y').format(request.visitDate!),
                       ),
                       const SizedBox(height: 12),
                       _buildInfoRow(
                         Icons.access_time,
                         'Requested Time',
-                        DateFormat('h:mm a').format(request.visitDate),
+                        DateFormat('h:mm a').format(request.visitDate!),
                       ),
                       const SizedBox(height: 12),
                       const Divider(),
