@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../config/theme.dart';
@@ -63,17 +64,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (state is ProfileUpdateSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Profile updated successfully'),
+                content: Text('✅ Profile updated successfully!'),
                 backgroundColor: Colors.green,
+                duration: Duration(seconds: 2),
               ),
             );
-            Navigator.pop(context);
+            // No hacer pop inmediatamente, esperar a que el usuario vea el mensaje
+            Future.delayed(const Duration(seconds: 1), () {
+              if (mounted) Navigator.pop(context);
+            });
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text('❌ ${state.message}'),
                 backgroundColor: Colors.red,
-
+                duration: const Duration(seconds: 4),
+                action: SnackBarAction(
+                  label: 'Dismiss',
+                  textColor: Colors.white,
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  },
+                ),
               ),
             );
           }
@@ -124,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    user.email ,
+                    user.email,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[600],
@@ -173,8 +185,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 prefixIcon: Icon(Icons.person),
               ),
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your first name';
+                if (value == null || value.trim().isEmpty) {
+                  return 'First name is required';
+                }
+                if (value.trim().length < 2) {
+                  return 'First name must be at least 2 characters';
                 }
                 return null;
               },
@@ -190,8 +205,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 prefixIcon: Icon(Icons.person),
               ),
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your last name';
+                if (value == null || value.trim().isEmpty) {
+                  return 'Last name is required';
+                }
+                if (value.trim().length < 2) {
+                  return 'Last name must be at least 2 characters';
                 }
                 return null;
               },
@@ -202,14 +220,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
             TextFormField(
               controller: _phoneController,
               keyboardType: TextInputType.phone,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(9),
+              ],
               decoration: const InputDecoration(
                 labelText: 'Phone Number',
-                hintText: 'Enter your phone number',
+                hintText: 'Enter 9 digits (e.g., 987654321)',
                 prefixIcon: Icon(Icons.phone),
+                helperText: 'Peruvian format: 9 digits only',
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter your phone number';
+                  return 'Phone number is required';
+                }
+                if (value.length != 9) {
+                  return 'Must be exactly 9 digits';
+                }
+                if (!RegExp(r'^\d{9}$').hasMatch(value)) {
+                  return 'Only numbers allowed';
+                }
+                // Validar que empiece con 9 (números móviles peruanos)
+                if (!value.startsWith('9')) {
+                  return 'Mobile numbers must start with 9';
                 }
                 return null;
               },
@@ -219,14 +252,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Address
             TextFormField(
               controller: _addressController,
+              maxLines: 2,
               decoration: const InputDecoration(
                 labelText: 'Address',
-                hintText: 'Enter your address',
+                hintText: 'Enter your complete address',
                 prefixIcon: Icon(Icons.location_on),
               ),
               validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your address';
+                if (value == null || value.trim().isEmpty) {
+                  return 'Address is required';
+                }
+                if (value.trim().length < 10) {
+                  return 'Please enter a complete address';
                 }
                 return null;
               },
@@ -237,13 +274,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
             CustomButton(
               text: 'Update Profile',
               onPressed: () {
+                // Quitar el foco de los campos de texto
+                FocusScope.of(context).unfocus();
+
                 if (_formKey.currentState!.validate()) {
+                  // Debug logs
+                  print('📝 Form validation passed');
+                  print('📝 Data to send:');
+                  print('   - firstName: "${_firstNameController.text.trim()}"');
+                  print('   - lastName: "${_lastNameController.text.trim()}"');
+                  print('   - phoneNumber: "${_phoneController.text.trim()}"');
+                  print('   - address: "${_addressController.text.trim()}"');
+
+                  // Verificar que no hay datos vacíos después del trim
+                  final firstName = _firstNameController.text.trim();
+                  final lastName = _lastNameController.text.trim();
+                  final phoneNumber = _phoneController.text.trim();
+                  final address = _addressController.text.trim();
+
+                  if (firstName.isEmpty || lastName.isEmpty || phoneNumber.isEmpty || address.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('❌ All fields must be filled'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
+
                   context.read<AuthBloc>().add(
                     UpdateProfileEvent(
-                      firstName: _firstNameController.text.trim(),
-                      lastName: _lastNameController.text.trim(),
-                      phoneNumber: _phoneController.text.trim(),
-                      address: _addressController.text.trim(),
+                      firstName: firstName,
+                      lastName: lastName,
+                      phoneNumber: phoneNumber,
+                      address: address,
+                    ),
+                  );
+                } else {
+                  print('❌ Form validation failed');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('❌ Please fix the errors above'),
+                      backgroundColor: Colors.orange,
                     ),
                   );
                 }

@@ -81,9 +81,37 @@ class AuthRepository {
     }
   }
 
-  Future<User> updateProfile(User user) async {
+  // Método actualizado para usar datos específicos del perfil
+  Future<User> updateProfile({
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String address,
+  }) async {
     try {
-      final updatedUser = await authService.updateProfile(user);
+      print('🔄 AuthRepository calling authService.updateProfile'); // Debug
+
+      final updatedUser = await authService.updateProfile(
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        address: address,
+      );
+
+      print('✅ AuthRepository received updated user: ${updatedUser.firstName} ${updatedUser.lastName}'); // Debug
+
+      await secureStorage.saveUser(json.encode(updatedUser.toJson()));
+      return updatedUser;
+    } catch (e) {
+      print('❌ AuthRepository error: $e'); // Debug
+      throw e;
+    }
+  }
+
+  // Mantener el método original por compatibilidad
+  Future<User> updateProfileWithUser(User user) async {
+    try {
+      final updatedUser = await authService.updateProfileWithUser(user);
       await secureStorage.saveUser(json.encode(updatedUser.toJson()));
       return updatedUser;
     } catch (e) {

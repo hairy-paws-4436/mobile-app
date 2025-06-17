@@ -101,6 +101,74 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  Future<void> _onUpdateProfile(
+      UpdateProfileEvent event,
+      Emitter<AuthState> emit,
+      ) async {
+    emit(AuthLoading());
+    try {
+      // Verificar que el usuario esté autenticado
+      final currentUser = await authRepository.getCurrentUser();
+      if (currentUser == null) {
+        emit(AuthError(message: 'User not found. Please login again.'));
+        return;
+      }
+
+      print('🔄 Updating profile for user: ${currentUser.email}');
+      print('🔄 Current user data: ${currentUser.firstName} ${currentUser.lastName} - ${currentUser.phoneNumber}');
+      print('🔄 New data: ${event.firstName.trim()}, ${event.lastName.trim()}, ${event.phoneNumber.trim()}, ${event.address.trim()}');
+
+      // Validar datos antes de enviar
+      final firstName = event.firstName.trim();
+      final lastName = event.lastName.trim();
+      final phoneNumber = event.phoneNumber.trim();
+      final address = event.address.trim();
+
+      if (firstName.isEmpty || lastName.isEmpty || phoneNumber.isEmpty || address.isEmpty) {
+        emit(AuthError(message: 'All fields are required'));
+        return;
+      }
+
+      // Validar formato del teléfono peruano (9 dígitos)
+      if (!RegExp(r'^\d{9}$').hasMatch(phoneNumber)) {
+        emit(AuthError(message: 'Phone number must be exactly 9 digits'));
+        return;
+      }
+
+      // Usar el nuevo método del repository
+      final result = await authRepository.updateProfile(
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        address: address,
+      );
+
+      print('✅ Profile updated successfully: ${result.firstName} ${result.lastName} - ${result.phoneNumber}');
+
+      emit(ProfileUpdateSuccess(user: result));
+      // Emitir el estado autenticado después de un breve delay para que se vea el mensaje de éxito
+      await Future.delayed(const Duration(milliseconds: 500));
+      emit(Authenticated(user: result));
+    } catch (e) {
+      print('❌ Error updating profile in bloc: $e');
+
+      // Extraer mensaje de error más limpio
+      String errorMessage = e.toString();
+      if (errorMessage.startsWith('Exception: ')) {
+        errorMessage = errorMessage.substring(11);
+      }
+
+      emit(AuthError(message: errorMessage));
+
+      // Volver al estado autenticado después del error
+      final currentUser = await authRepository.getCurrentUser();
+      if (currentUser != null) {
+        await Future.delayed(const Duration(milliseconds: 2000));
+        emit(Authenticated(user: currentUser));
+      }
+    }
+  }
+
   Future<void> _onLogout(
       LogoutEvent event,
       Emitter<AuthState> emit,
@@ -131,38 +199,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _onUpdateProfile(
-      UpdateProfileEvent event,
-      Emitter<AuthState> emit,
-      ) async {
-    emit(AuthLoading());
-    try {
-      // Get current user first
-      final currentUser = await authRepository.getCurrentUser();
-      if (currentUser == null) {
-        emit(AuthError(message: 'User not found'));
-        return;
-      }
 
-      // Update with new values
-      final updatedUser = User(
-        id: currentUser.id,
-        email: currentUser.email,
-        firstName: event.firstName,
-        lastName: event.lastName,
-        phoneNumber: event.phoneNumber,
-        role: currentUser.role,
-        address: event.address,
-        is2faEnabled: currentUser.is2faEnabled,
-      );
-
-      final result = await authRepository.updateProfile(updatedUser);
-      emit(ProfileUpdateSuccess(user: result));
-      emit(Authenticated(user: result));
-    } catch (e) {
-      emit(AuthError(message: e.toString()));
-    }
-  }
 
   Future<void> _onChangePassword(
       ChangePasswordEvent event,

@@ -160,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget? _buildFloatingActionButton() {
     // Only show FAB for specific tabs and roles
-    if (_currentIndex == 0 && _currentUser.role == 'owner') {
+    if (_currentIndex == 0 && (_currentUser.role == 'owner' || _currentUser.role == 'ong')) {
       // Add pet FAB for owners in pets tab
       return FloatingActionButton(
         onPressed: () {
@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppTheme.primaryColor,
         child: const Icon(Icons.add),
       );
-    } else if (_currentIndex == 2 && _currentUser.role == 'ngo') {
+    } else if (_currentIndex == 2 && _currentUser.role == 'ong') {
       // Add event FAB for NGOs in events tab
       return FloatingActionButton(
         onPressed: () {

@@ -37,4 +37,53 @@ class NotificationRepository {
       throw e;
     }
   }
+
+  // Methods for all request types
+  Future<void> acceptDonation(String donationId, String? notes) async {
+    try {
+      await notificationService.acceptDonation(donationId, notes);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> rejectDonation(String donationId, String? reason) async {
+    try {
+      await notificationService.rejectDonation(donationId, reason);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> acceptAdoption(String adoptionId, String? notes) async {
+    try {
+      await notificationService.acceptAdoption(adoptionId, notes);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> rejectAdoption(String adoptionId, String? reason) async {
+    try {
+      await notificationService.rejectAdoption(adoptionId, reason);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> acceptVisit(String visitId, String? notes) async {
+    try {
+      await notificationService.acceptVisit(visitId, notes);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> rejectVisit(String visitId, String? reason) async {
+    try {
+      await notificationService.rejectVisit(visitId, reason);
+    } catch (e) {
+      throw e;
+    }
+  }
 }

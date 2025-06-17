@@ -1,5 +1,3 @@
-
-
 import '../models/auth.dart';
 import '../models/user.dart';
 import 'api_client.dart';
@@ -55,9 +53,38 @@ class AuthService {
     await apiClient.post('/api/users/deactivate');
   }
 
-  Future<User> updateProfile(User user) async {
-    final response = await apiClient.put('/api/users/profile', body: user.toJson());
+  // MÉTODO ACTUALIZADO: Solo envía los campos que se pueden actualizar
+  Future<User> updateProfile({
+    required String firstName,
+    required String lastName,
+    required String phoneNumber,
+    required String address,
+  }) async {
+    // Preparar solo los datos que se pueden actualizar
+    final requestBody = {
+      'firstName': firstName,
+      'lastName': lastName,
+      'phoneNumber': phoneNumber,
+      'address': address,
+    };
+
+    print('📤 AuthService sending data: $requestBody'); // Debug
+
+    final response = await apiClient.put('/api/users/profile', body: requestBody);
+
+    print('📥 AuthService received response: $response'); // Debug
+
     return User.fromJson(response);
+  }
+
+  // Método de compatibilidad que usa el objeto User completo
+  Future<User> updateProfileWithUser(User user) async {
+    return updateProfile(
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phoneNumber: user.phoneNumber,
+      address: user.address,
+    );
   }
 
   Future<void> logout() async {
