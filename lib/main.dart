@@ -6,8 +6,12 @@ import 'package:mobile_app/presentation/bloc/auth/auth_bloc.dart';
 import 'package:mobile_app/presentation/bloc/auth/auth_event.dart';
 import 'package:mobile_app/presentation/bloc/donation/donation_bloc.dart';
 import 'package:mobile_app/presentation/bloc/event/event_bloc.dart';
+import 'package:mobile_app/presentation/bloc/gamification/gamification_bloc.dart';
+import 'package:mobile_app/presentation/bloc/matching/matching_bloc.dart';
 import 'package:mobile_app/presentation/bloc/ngo/ngo_bloc.dart';
+import 'package:mobile_app/presentation/bloc/notification-preferences/notification_preferences_bloc.dart';
 import 'package:mobile_app/presentation/bloc/notification/notification_bloc.dart';
+import 'package:mobile_app/presentation/bloc/post-adoption/post_adoption_bloc.dart';
 import 'package:mobile_app/routes/app_router.dart';
 
 import 'config/theme.dart';
@@ -65,6 +69,10 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<NotificationBloc>()),
         BlocProvider(create: (_) => di.sl<DonationBloc>()),
         BlocProvider(create: (_) => di.sl<AdoptionBloc>()),
+        BlocProvider(create: (_) => di.sl<MatchingBloc>()),
+        BlocProvider(create: (_) => di.sl<GamificationBloc>()),
+        BlocProvider(create: (_) => di.sl<PostAdoptionBloc>()),
+        BlocProvider(create: (_) => di.sl<NotificationPreferencesBloc>()),
       ],
       child: MaterialApp(
         title: 'Pet Adoption App',

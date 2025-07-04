@@ -100,9 +100,125 @@ class ProfileTab extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
+          // Smart Matching Section (solo para adoptantes)
+          if (user.role == 'adopter') ...[
+            const Text(
+              'Matching Inteligente',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            _buildMenuOption(
+              context,
+              icon: Icons.psychology,
+              title: 'Mis Recomendaciones',
+              subtitle: 'Mascotas perfectas para ti',
+              onTap: () {
+                Navigator.pushNamed(context, '/recommendations');
+              },
+            ),
+
+            _buildMenuOption(
+              context,
+              icon: Icons.tune,
+              title: 'Preferencias de Adopción',
+              subtitle: 'Configura tus criterios de búsqueda',
+              onTap: () {
+                Navigator.pushNamed(context, '/preferences-form');
+              },
+            ),
+
+            const SizedBox(height: 24),
+          ],
+
+          // Gamification Section (solo para ONGs)
+          if (user.role == 'ong') ...[
+            const Text(
+              'Gamificación y Progreso',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            _buildMenuOption(
+              context,
+              icon: Icons.dashboard,
+              title: 'Mi Dashboard',
+              subtitle: 'Progreso, puntos y estadísticas',
+              onTap: () {
+                Navigator.pushNamed(context, '/gamification-dashboard');
+              },
+            ),
+
+            _buildMenuOption(
+              context,
+              icon: Icons.leaderboard,
+              title: 'Ranking de ONGs',
+              subtitle: 'Ve tu posición en el ranking',
+              onTap: () {
+                Navigator.pushNamed(context, '/gamification-leaderboard');
+              },
+            ),
+
+            _buildMenuOption(
+              context,
+              icon: Icons.emoji_events,
+              title: 'Mis Insignias',
+              subtitle: 'Logros desbloqueados y por desbloquear',
+              onTap: () {
+                Navigator.pushNamed(context, '/gamification-badges');
+              },
+            ),
+
+            const SizedBox(height: 24),
+          ],
+
+          // Post-Adoption Section (para adoptantes y ONGs)
+          if (user.role == 'adopter' || user.role == 'ong') ...[
+            const Text(
+              'Seguimiento Post-Adopción',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            if (user.role == 'adopter') ...[
+              _buildMenuOption(
+                context,
+                icon: Icons.assignment_turned_in,
+                title: 'Mis Seguimientos',
+                subtitle: 'Evaluaciones de adaptación pendientes',
+                onTap: () {
+                  Navigator.pushNamed(context, '/post-adoption');
+                },
+              ),
+            ],
+
+            if (user.role == 'ong') ...[
+              _buildMenuOption(
+                context,
+                icon: Icons.analytics,
+                title: 'Dashboard de Seguimientos',
+                subtitle: 'Analíticas y adopciones en riesgo',
+                onTap: () {
+                  Navigator.pushNamed(context, '/ngo-dashboard');
+                },
+              ),
+            ],
+
+            const SizedBox(height: 24),
+          ],
+
           // Account Section
           const Text(
-            'Account',
+            'Cuenta',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -113,7 +229,7 @@ class ProfileTab extends StatelessWidget {
           _buildMenuOption(
             context,
             icon: Icons.person,
-            title: 'Edit Profile',
+            title: 'Editar Perfil',
             onTap: () {
               Navigator.pushNamed(context, '/profile');
             },
@@ -123,7 +239,7 @@ class ProfileTab extends StatelessWidget {
             _buildMenuOption(
               context,
               icon: Icons.pets,
-              title: 'My Pets',
+              title: 'Mis Mascotas',
               onTap: () {
                 Navigator.pushNamed(context, '/owner-animals');
               },
@@ -132,7 +248,7 @@ class ProfileTab extends StatelessWidget {
           _buildMenuOption(
             context,
             icon: Icons.history,
-            title: 'Adoption Requests',
+            title: 'Solicitudes de Adopción',
             onTap: () {
               Navigator.pushNamed(context, '/adoption-requests');
             },
@@ -141,7 +257,7 @@ class ProfileTab extends StatelessWidget {
           _buildMenuOption(
             context,
             icon: Icons.lock,
-            title: 'Change Password',
+            title: 'Cambiar Contraseña',
             onTap: () {
               Navigator.pushNamed(context, '/change-password');
             },
@@ -149,25 +265,35 @@ class ProfileTab extends StatelessWidget {
 
           _buildMenuOption(
             context,
-            icon: Icons.security,
-            title: 'Two-Factor Authentication',
-            subtitle: user.is2faEnabled ? 'Enabled' : 'Disabled',
-            trailing: Switch(
-              value: user.is2faEnabled,
-              onChanged: (value) {
-                if (!user.is2faEnabled) {
-                  context.read<AuthBloc>().add(Enable2FAEvent());
-                }
-              },
-            ),
+            icon: Icons.notifications,
+            title: 'Configurar Notificaciones',
+            subtitle: 'Personaliza cómo recibes notificaciones',
+            onTap: () {
+              Navigator.pushNamed(context, '/notification-settings');
+            },
           ),
+
+
+          const SizedBox(height: 24),
+
+          // Herramientas para Owners/NGOs
+          if (user.role == 'owner' || user.role == 'ong') ...[
+            const Text(
+              'Herramientas de Gestión',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
 
           // NGO Registration (for adopters and owners)
           if (user.role != 'ong')
             _buildMenuOption(
               context,
               icon: Icons.business,
-              title: 'Register as NGO',
+              title: 'Registrarse como NGO',
               onTap: () {
                 Navigator.pushNamed(context, '/ngo-form');
               },
@@ -178,7 +304,7 @@ class ProfileTab extends StatelessWidget {
             _buildMenuOption(
               context,
               icon: Icons.business,
-              title: 'My NGO',
+              title: 'Mi NGO',
               onTap: () {
                 Navigator.pushNamed(context, '/ngo-details', arguments: {'isUserNGO': true});
               },
@@ -188,7 +314,7 @@ class ProfileTab extends StatelessWidget {
 
           // Danger Zone
           const Text(
-            'Danger Zone',
+            'Zona de Peligro',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -200,7 +326,7 @@ class ProfileTab extends StatelessWidget {
           _buildMenuOption(
             context,
             icon: Icons.person_off,
-            title: 'Deactivate Account',
+            title: 'Desactivar Cuenta',
             iconColor: Colors.red,
             textColor: Colors.red,
             onTap: () {
@@ -212,7 +338,7 @@ class ProfileTab extends StatelessWidget {
 
           // Logout Button
           CustomButton(
-            text: 'Log Out',
+            text: 'Cerrar Sesión',
             onPressed: () {
               _showLogoutDialog(context);
             },
@@ -264,14 +390,14 @@ class ProfileTab extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Log Out'),
-        content: const Text('Are you sure you want to log out?'),
+        title: const Text('Cerrar Sesión'),
+        content: const Text('¿Estás seguro que deseas cerrar sesión?'),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('Cancel'),
+            child: const Text('Cancelar'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -285,7 +411,7 @@ class ProfileTab extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            child: const Text('Log Out'),
+            child: const Text('Cerrar Sesión'),
           ),
         ],
       ),
@@ -296,16 +422,16 @@ class ProfileTab extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Deactivate Account'),
+        title: const Text('Desactivar Cuenta'),
         content: const Text(
-          'Are you sure you want to deactivate your account? This action cannot be undone.',
+          '¿Estás seguro que deseas desactivar tu cuenta? Esta acción no se puede deshacer.',
         ),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('Cancel'),
+            child: const Text('Cancelar'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -319,7 +445,7 @@ class ProfileTab extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            child: const Text('Deactivate'),
+            child: const Text('Desactivar'),
           ),
         ],
       ),
@@ -342,11 +468,11 @@ class ProfileTab extends StatelessWidget {
   String _getRoleText(String role) {
     switch (role.toLowerCase()) {
       case 'adopter':
-        return 'Pet Adopter';
+        return 'Adoptante';
       case 'owner':
-        return 'Pet Owner';
+        return 'Dueño de Mascota';
       case 'ong':
-        return 'NGO Admin';
+        return 'Administrador NGO';
       default:
         return role;
     }

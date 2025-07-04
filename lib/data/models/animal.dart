@@ -9,7 +9,7 @@ class Animal {
   final double weight;
   final String healthDetails;
   final bool vaccinated;
-  final bool sterilized ;
+  final bool sterilized;
   final List<String> images;
   final String? ownerId;
 
@@ -24,12 +24,33 @@ class Animal {
     required this.weight,
     required this.healthDetails,
     required this.vaccinated,
-    required this.sterilized ,
+    required this.sterilized,
     required this.images,
     required this.ownerId,
   });
 
   factory Animal.fromJson(Map<String, dynamic> json) {
+    // Filtrar imágenes vacías o inválidas
+    List<String> validImages = [];
+    if (json['images'] != null) {
+      for (var image in json['images']) {
+        String? imageUrl;
+
+        if (image is String) {
+          imageUrl = image;
+        } else if (image is Map && image['imageUrl'] != null) {
+          imageUrl = image['imageUrl'].toString();
+        }
+
+        // Solo agregar URLs válidas que no estén vacías y sean URLs reales
+        if (imageUrl != null &&
+            imageUrl.trim().isNotEmpty &&
+            (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+          validImages.add(imageUrl);
+        }
+      }
+    }
+
     return Animal(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
@@ -42,10 +63,37 @@ class Animal {
           ? json['weight']
           : double.tryParse(json['weight']?.toString() ?? '0.0') ?? 0.0,
       healthDetails: json['healthDetails'] ?? '',
-      vaccinated : json['vaccinated'] ?? false,
-      sterilized : json['sterilized'] ?? false,
-      images: List<String>.from(json['images']) ,
-      ownerId: json['ownerId'] ?? '',
+      vaccinated: json['vaccinated'] ?? false,
+      sterilized: json['sterilized'] ?? false,
+      images: validImages,
+      ownerId: json['ownerId'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'type': type,
+      'breed': breed,
+      'age': age,
+      'gender': gender,
+      'description': description,
+      'weight': weight,
+      'healthDetails': healthDetails,
+      'vaccinated': vaccinated,
+      'sterilized': sterilized,
+      'images': images,
+      'ownerId': ownerId,
+    };
+  }
+
+  // Helper method para obtener la primera imagen válida
+  String? get firstValidImage {
+    if (images.isEmpty) return null;
+    return images.first;
+  }
+
+  // Helper method para verificar si tiene imágenes válidas
+  bool get hasValidImages => images.isNotEmpty;
 }
